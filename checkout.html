@@ -1,0 +1,29 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Prévia de checkout | Bíblia em Curtas</title><link rel="stylesheet" href="visual.css"></head><body class="" style=""><header class="site-header"><div class="wrap header-inner"><a class="brand" href="links.html"><img src="imagens/avatar.jpg" alt="" class=""> Bíblia em Curtas</a><a id="back" href="index.html">Voltar à página</a></div></header><div class="preview-note">Prévia de aparência do checkout. Nenhum pagamento é processado aqui.</div><main class="checkout"><h1>Resumo da compra</h1><label>Prévia do produto<select id="product"><option value="historias">Era Uma Vez na Bíblia</option><option value="catequese">Caminhando com Jesus</option><option value="ebd">Descobrindo a Bíblia</option></select></label><div class="purchase"><img id="cover" src="imagens/historias-capa.jpg" alt=""><div><strong id="book-name"></strong><small id="book-detail"></small></div><span class="purchase-price" id="book-price"></span></div><div id="extra-group"><label>Extra em teste<select id="extra-type"><option value="colorir">Natal com Jesus para Colorir</option><option value="brincar">Brincando com a Bíblia</option></select></label><label class="bump" id="bump-card" style="margin-top:12px"><input id="extra" type="checkbox"><span><strong id="extra-name"></strong><br><small id="extra-desc"></small></span></label></div><div class="total"><span>Total</span><span id="amount" aria-live="polite"></span></div><button class="btn" type="button" disabled>Finalizar compra</button><p class="micro center">PDF digital · entrega por e-mail após o pagamento</p></main><script>
+const data={"books": {"historias": {"name": "Era Uma Vez na Bíblia", "pdf": "era-uma-vez-na-biblia-edicao-infantil-vertical", "media": 6, "page": "index.html", "quantity": "30 histórias", "accent": "#A33B43", "hover": "#842D36", "soft": "#FBE4E3", "cost": 990, "age": "5 a 8 anos", "cta": "Quero as 30 histórias", "headline": "30 histórias da Bíblia \u003cspan class=\"marker\">para ler em família.\u003c/span>", "lead": "Uma história por noite, com duas cenas ilustradas, uma pergunta e uma oração curta.", "sub": "30 histórias ilustradas para ler em família", "closing": "Hoje é noite de \u003cspan class=\"marker\">uma boa história.\u003c/span>", "picture": "imagens/historias-capa.jpg"}, "catequese": {"name": "Caminhando com Jesus", "pdf": "caminhando-com-jesus-edicao-ampliada", "media": 4, "page": "catequese.html", "quantity": "12 encontros", "accent": "#843F65", "hover": "#69324F", "soft": "#F5E3EF", "cost": 1990, "age": "7 a 10 anos", "cta": "Quero os 12 encontros", "headline": "12 encontros de \u003cspan class=\"marker\">catequese infantil.\u003c/span>", "lead": "Roteiros católicos com passagem bíblica, conversa, dinâmica e uma ficha para cada criança.", "sub": "Catequese infantil católica", "closing": "Seu próximo encontro \u003cspan class=\"marker\">já tem um roteiro.\u003c/span>", "picture": "imagens/catequese-capa.jpg"}, "ebd": {"name": "Descobrindo a Bíblia", "pdf": "descobrindo-a-biblia-edicao-ampliada", "media": 4, "page": "estudo-biblico.html", "quantity": "12 estudos", "accent": "#3D5495", "hover": "#304374", "soft": "#E6ECFC", "cost": 1990, "age": "7 a 10 anos", "cta": "Quero os 12 estudos", "headline": "12 estudos bíblicos \u003cspan class=\"marker\">para crianças.\u003c/span>", "lead": "Histórias, perguntas e atividades para famílias evangélicas e turmas de Escola Bíblica Dominical.", "sub": "Família e Escola Bíblica Dominical", "closing": "Abra a Bíblia. \u003cspan class=\"marker\">Comece a conversa.\u003c/span>", "picture": "imagens/ebd-capa.jpg"}}, "bumps": {"colorir": {"name": "Natal com Jesus para Colorir", "pdf": "natal-com-jesus-para-colorir-edicao-ampliada", "cost": 590, "accent": "#235F71", "soft": "#E0F0F3", "sub": "16 cenas para imprimir e pintar"}, "brincar": {"name": "Brincando com a Bíblia", "pdf": "brincando-com-a-biblia-edicao-ampliada", "cost": 790, "accent": "#346747", "soft": "#E3F1E1", "sub": "20 atividades bíblicas com gabarito"}}};
+const query=new URLSearchParams(location.search);
+const product=Object.hasOwn(data.books,query.get('produto'))?query.get('produto'):'historias';
+const b=data.books[product], root=document.querySelector('.checkout');
+document.getElementById('product').value=product;
+root.style.setProperty('--accent',b.accent);root.style.setProperty('--soft',b.soft);
+const fmt=new Intl.NumberFormat('pt-BR',{style:'currency',currency:'BRL'});
+const currency=n=>fmt.format(n/100);
+document.getElementById('book-name').textContent=b.name;
+document.getElementById('book-detail').textContent=b.sub;
+document.getElementById('book-price').textContent=currency(b.cost);
+document.getElementById('cover').src=b.picture;
+document.getElementById('back').href=b.page;
+const select=document.getElementById('extra-type'), bump=document.getElementById('extra');
+const isMain=product==='historias';
+document.getElementById('extra-group').hidden=!isMain;
+function total(){
+ const x=data.bumps[select.value];
+ document.getElementById('extra-name').textContent=x.name+' · '+currency(x.cost);
+ document.getElementById('extra-desc').textContent=x.sub;
+ const card=document.getElementById('bump-card');
+ card.style.background=x.soft;card.style.borderColor=x.accent;bump.style.accentColor=x.accent;
+ document.getElementById('amount').textContent=currency(b.cost+(isMain&&bump.checked?x.cost:0));
+}
+select.addEventListener('change',()=>{bump.checked=false;total()});bump.addEventListener('change',total);
+document.getElementById('product').addEventListener('change',event=>{location.search=new URLSearchParams({produto:event.target.value})});
+total();
+</script></body></html>
